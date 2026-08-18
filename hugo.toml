@@ -1,0 +1,23 @@
+baseURL = 'https://zerodowntime.info/'
+defaultContentLanguage = 'pt'
+
+[languages]
+  [languages.pt]
+    languageName = 'PT-BR'
+    title = 'zerodowntime.info - logs de bordo'
+    weight = 1
+[languages.pt.params]
+      description = "Acompanhe o dump do meu cérebro enquanto eu debugo arquiteturas complexas, testo novas ferramentas e compartilho aprendizados reais de engenharia de software e DevOps."
+      author = "DevOps Learner"
+
+  [languages.en]
+    languageName = 'EN'
+    title = 'zerodowntime.info - logbook'
+    weight = 2
+    
+    [languages.en.params]
+      description = "Follow my brain dump as I debug complex architectures, test new tools, and share real software engineering and DevOps learnings."
+      author = "DevOps Learner"
+
+[taxonomies]
+  tag = "tags"

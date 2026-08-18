@@ -1,0 +1,44 @@
+{{ define "main" }}
+<div class="journal-hero">
+  <span class="hero-badge"><i class="fa-solid fa-box-archive"></i> OFFLINE_STORAGE</span>
+  <h1 class="hero-title">{{ if eq $.Site.Language.Lang "en" }}Full <span class="text-gradient">Archive</span>{{ else }}Arquivo <span class="text-gradient">Completo</span>{{ end }}</h1>
+  <p class="hero-subtitle">{{ if eq $.Site.Language.Lang "en" }}All previous logs, organized by date.{{ else }}Todos os logs anteriores, organizados por data.{{ end }}</p>
+</div>
+
+<div class="post-detail-wrapper" style="max-width: 900px; padding: 2rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-clean); box-shadow: var(--shadow-sm); transition: var(--transition-smooth);">
+  
+  {{ $posts := where .Site.RegularPages "Type" "posts" }}
+  {{ range $posts.GroupByDate "2006" }}
+    <section style="margin-bottom: 3rem;">
+      <h2 style="font-family: var(--font-display); font-size: 2rem; color: var(--text-primary); border-bottom: 2px solid var(--border-clean); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
+        <i class="fa-regular fa-folder-open" style="color: var(--accent-green);"></i> {{ .Key }}
+      </h2>
+      
+      {{ range .Pages.GroupByDate "01" }}
+      <div style="margin-bottom: 2rem; padding-left: 1.5rem; border-left: 2px solid var(--border-clean);">
+        <h3 style="font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          {{ if eq $.Site.Language.Lang "en" }}{{ index hugo.Data.months .Key | default (printf "Month %s" .Key) }}{{ else }}{{ index hugo.Data.months .Key | default (printf "Mês %s" .Key) }}{{ end }}
+        </h3>
+        
+        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.8rem;">
+          {{ range .Pages }}
+          <li>
+            <a href="{{ .Permalink }}" style="text-decoration: none; display: flex; align-items: baseline; gap: 1rem; transition: var(--transition-smooth);">
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); min-width: 80px;">
+                {{ .Date.Format "02/01" }}
+              </span>
+              <span style="font-weight: 600; color: var(--text-primary); font-size: 1.05rem;" onmouseover="this.style.color='var(--accent-green)'" onmouseout="this.style.color='var(--text-primary)'">
+                {{ .Title }}
+              </span>
+            </a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+      {{ end }}
+      
+    </section>
+  {{ end }}
+
+</div>
+{{ end }}

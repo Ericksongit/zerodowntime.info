@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <meta name="author" content="{{ .Site.Params.author }}">
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="{{ "css/fonts.css" | relURL }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Static Assets -->
+  <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}?v=2">
+  <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+</head>
+<body>
+
+  <!-- Sleek Cyber Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="{{ "/" | relLangURL }}" class="app-logo" id="btn-home-logo">
+        <span class="logo-accent">zero</span>
+        <span class="logo-text">downtime</span>
+        <span class="logo-sub">.info</span>
+        
+        <!-- Live System Status breathing dot -->
+        <span class="status-indicator" title="Uptime 100% - Active">
+          <span class="status-dot"></span> active
+        </span>
+      </a>
+      
+      <nav class="app-nav">
+        <a href="{{ "/" | relLangURL }}" class="nav-link" id="nav-btn-home">
+          <i class="fa-solid fa-terminal nav-icon"></i> logs
+        </a>
+
+        <a href="{{ "about/" | relLangURL }}" class="nav-link">
+          <i class="fa-solid fa-user-astronaut nav-icon"></i> {{ if eq $.Site.Language.Lang "en" }}about{{ else }}sobre{{ end }}
+        </a>
+        {{ if .IsTranslated }}
+          {{ range .Translations }}
+            <a href="{{ .Permalink }}" class="nav-link" title="Mudar Idioma">
+              <i class="fa-solid fa-earth-americas nav-icon"></i> {{ .Language.LanguageName }}
+            </a>
+          {{ end }}
+        {{ else }}
+          {{ range .Site.Languages }}
+            {{ if ne . $.Site.Language }}
+              <a href="/{{ if eq .Lang "pt" }}{{ else }}{{ .Lang }}/{{ end }}" class="nav-link" title="Mudar Idioma">
+                <i class="fa-solid fa-earth-americas nav-icon"></i> {{ .LanguageName }}
+              </a>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+        <a href="#" class="nav-link theme-toggle" id="theme-toggle" title="{{ if eq $.Site.Language.Lang "en" }}Toggle Theme{{ else }}Alternar Tema{{ end }}">
+          <i class="fa-solid fa-sun nav-icon" id="theme-icon"></i> theme
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main View Render -->
+  <main class="app-main-content">
+    <div class="main-container">
+      {{ block "main" . }}{{ end }}
+    </div>
+  </main>
+
+  <!-- Premium Futuristic Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <p>&copy; {{ now.Year }} <span class="accent-color">zerodowntime.info</span></p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+          {{ if eq $.Site.Language.Lang "en" }}
+            Open source at <a href="https://github.com/Ericksongit/zerodowntime.info" target="_blank" style="color: var(--accent-green); text-decoration: none;"><i class="fa-brands fa-github"></i> GitHub</a>.
+            Based on <a href="https://github.com/akitaonrails/akitaonrails.github.io" target="_blank" style="color: var(--accent-green); text-decoration: none;">AkitaOnRails</a>. 
+            Under the same license. Building with <a href="https://gohugo.io" target="_blank" style="color: var(--accent-green); text-decoration: none;">Hugo</a>.
+          {{ else }}
+            Código aberto no <a href="https://github.com/Ericksongit/zerodowntime.info" target="_blank" style="color: var(--accent-green); text-decoration: none;"><i class="fa-brands fa-github"></i> GitHub</a>.
+            Baseado no <a href="https://github.com/akitaonrails/akitaonrails.github.io" target="_blank" style="color: var(--accent-green); text-decoration: none;">AkitaOnRails</a>. 
+            Sob a mesma licença. Building with <a href="https://gohugo.io" target="_blank" style="color: var(--accent-green); text-decoration: none;">Hugo</a>.
+          {{ end }}
+        </p>
+      </div>
+      <div class="footer-links">
+        <span class="footer-tagline">// system_status: operational / uptime: 100%</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ "js/app.js" | relURL }}"></script>
+  <!-- Scripts -->
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const htmlEl = document.documentElement;
+    
+    const savedTheme = localStorage.getItem('theme');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    
+    if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+      htmlEl.setAttribute('data-theme', 'light');
+      themeIcon.classList.replace('fa-sun', 'fa-moon');
+    }
+    
+    themeToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (htmlEl.getAttribute('data-theme') === 'light') {
+        htmlEl.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        htmlEl.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+      }
+    });
+  </script>
+</body>
+</html>

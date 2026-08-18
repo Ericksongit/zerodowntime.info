@@ -1,0 +1,117 @@
+{{ define "main" }}
+{{ if .IsHome }}
+<div class="journal-hero">
+  <span class="hero-badge"><i class="fa-solid fa-bolt"></i> SYSTEM.ONLINE</span>
+  <h1 class="hero-title">zero<span class="text-gradient">downtime</span>.info</h1>
+  <p class="hero-subtitle">Engineering, DevOps & Infrastructure Journal</p>
+</div>
+{{ else }}
+<div class="journal-hero">
+  <h1 class="hero-title">{{ .Title }}</h1>
+</div>
+{{ end }}
+
+<div class="journal-main-grid">
+  <!-- Left Column: Posts Feed -->
+  <div class="posts-feed-column">
+    <div class="posts-grid">
+      {{ $postPages := where .Site.RegularPages "Type" "posts" }}
+      {{ $displayPages := $postPages }}
+      {{ if .IsHome }}
+        {{ $displayPages = where $postPages "Date.Year" now.Year }}
+      {{ end }}
+      {{ $paginator := .Paginate $displayPages }}
+      {{ range $paginator.Pages }}
+      <article class="post-card {{ if not .Params.image }}no-image{{ end }}">
+        {{ if .Params.image }}
+        <div class="card-image-wrapper">
+          {{ with .Resources.GetMatch .Params.image }}
+          <img src="{{ .RelPermalink }}" alt="{{ $.Title }}" class="card-image">
+          {{ else }}
+          <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" class="card-image">
+          {{ end }}
+        </div>
+        {{ end }}
+        <div class="card-body">
+          <div class="card-meta">
+            {{ if gt .Date.Year 1000 }}
+            <span class="meta-item"><i class="fa-regular fa-calendar"></i> {{ .Date.Format "02 Jan 2006" }}</span>
+            {{ end }}
+            {{ if .Params.reading_time }}
+            <span class="meta-item"><i class="fa-regular fa-clock"></i> {{ .Params.reading_time }} min</span>
+            {{ end }}
+          </div>
+          <h2 class="card-title">
+            <a href="{{ .Permalink }}" class="card-title-link">{{ .Title }}</a>
+          </h2>
+        </div>
+      </article>
+      {{ end }}
+    </div>
+    
+    <!-- Paginação -->
+    {{ template "_internal/pagination.html" . }}
+  </div>
+
+  <!-- Right Column: Sidebar -->
+  <aside class="sidebar-column">
+    <div class="sidebar-widget">
+      <h3 class="widget-title"><i class="fa-solid fa-terminal"></i> {{ if eq $.Site.Language.Lang "en" }}About{{ else }}Sobre{{ end }}</h3>
+      <div class="sidebar-author-profile">
+        <div class="sidebar-author-name">{{ .Site.Params.author }}</div>
+        <p class="sidebar-author-bio">{{ .Site.Params.description }}</p>
+      </div>
+    </div>
+    
+    <div class="sidebar-widget">
+      <h3 class="widget-title"><i class="fa-solid fa-calendar-days"></i> {{ if eq $.Site.Language.Lang "en" }}Archive{{ else }}Arquivo{{ end }}</h3>
+      <div class="archive-tree">
+        <ul class="archive-year-list">
+          {{ $currentYear := now.Format "2006" }}
+          
+          <!-- Ano Vigente -->
+          {{ $archivePosts := where .Site.RegularPages "Type" "posts" }}
+          {{ range $archivePosts.GroupByDate "2006" }}
+            {{ if eq .Key $currentYear }}
+            <li class="archive-year-item">
+              <span class="archive-year-title"><i class="fa-regular fa-calendar"></i> {{ .Key }} {{ if eq $.Site.Language.Lang "en" }}(Current){{ else }}(Atual){{ end }}</span>
+              <ul class="archive-month-list">
+                {{ range .Pages.GroupByDate "01" }}
+                <li class="archive-month-item">
+                  <a href="#" class="archive-month-link">{{ if eq $.Site.Language.Lang "en" }}{{ index hugo.Data.months .Key | default (printf "Month %s" .Key) }}{{ else }}{{ index hugo.Data.months .Key | default (printf "Mês %s" .Key) }}{{ end }} ({{ len .Pages }})</a>
+                </li>
+                {{ end }}
+              </ul>
+            </li>
+            {{ end }}
+          {{ end }}
+
+          <!-- Verificando se existem posts de anos anteriores -->
+          {{ $hasArchive := false }}
+          {{ range $archivePosts.GroupByDate "2006" }}
+            {{ if ne .Key $currentYear }}{{ $hasArchive = true }}{{ end }}
+          {{ end }}
+
+          <!-- Link para a página de Arquivo (Anos Passados) -->
+          {{ if $hasArchive }}
+          <li class="archive-year-item" style="margin-top: 1rem;">
+            <a href="{{ "/archives/" | relLangURL }}" style="text-decoration: none;">
+              <span class="archive-year-title" style="cursor: pointer; transition: color 0.2s;"><i class="fa-solid fa-folder"></i> {{ if eq $.Site.Language.Lang "en" }}Full Archive{{ else }}Arquivo Completo{{ end }} <i class="fa-solid fa-arrow-right" style="font-size: 0.7em; margin-left: 4px;"></i></span>
+            </a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+    
+    <div class="sidebar-widget">
+      <h3 class="widget-title"><i class="fa-solid fa-tags"></i> Tags</h3>
+      <div class="sidebar-tags-cloud">
+        {{ range .Site.Taxonomies.tags }}
+        <a href="{{ .Page.Permalink }}" class="sidebar-tag-link">{{ .Page.Title }} ({{ .Count }})</a>
+        {{ end }}
+      </div>
+    </div>
+  </aside>
+</div>
+{{ end }}

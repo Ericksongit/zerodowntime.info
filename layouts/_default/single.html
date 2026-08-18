@@ -1,0 +1,43 @@
+{{ define "main" }}
+<article class="post-detail-wrapper">
+  <div class="detail-navigation">
+    <a href="{{ "/" | relLangURL }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> cd ..</a>
+  </div>
+
+  <header class="post-header" style="margin-bottom: 2rem;">
+    <h1 class="hero-title" style="margin-bottom: 0.5rem; font-size: 2.5rem;">{{ .Title }}</h1>
+    {{ if ne .Type "page" }}
+    <div class="card-meta" style="margin-bottom: 1.5rem;">
+      {{ if gt .Date.Year 1000 }}
+      <span class="meta-item"><i class="fa-regular fa-calendar"></i> {{ .Date.Format "02 Jan 2006" }}</span>
+      {{ end }}
+      {{ if .Params.reading_time }}
+      <span class="meta-item"><i class="fa-regular fa-clock"></i> {{ .Params.reading_time }} min</span>
+      {{ end }}
+    </div>
+    {{ end }}
+    
+    {{ if .Params.tags }}
+    <div class="sidebar-tags-cloud" style="margin-bottom: 1.5rem;">
+      {{ range .Params.tags }}
+      <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="sidebar-tag-link">{{ . }}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  {{ if .Params.image }}
+  <div class="post-featured-image" style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-clean);">
+    {{ with .Resources.GetMatch .Params.image }}
+    <img src="{{ .RelPermalink }}" alt="{{ $.Title }}" style="width: 100%; height: auto; display: block;">
+    {{ else }}
+    <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" style="width: 100%; height: auto; display: block;">
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <div class="post-content" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary);">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}
