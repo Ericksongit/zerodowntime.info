@@ -5,54 +5,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('ZeroDowntime Journal Initialized successfully.');
 
-  // Mobile navigation
-  const menuToggle = document.getElementById('menu-toggle');
-  const primaryNavigation = document.getElementById('primary-navigation');
-
-  if (menuToggle && primaryNavigation) {
-    const mobileBreakpoint = window.matchMedia('(max-width: 767px)');
-
-    const closeMenu = (returnFocus = false) => {
-      primaryNavigation.classList.remove('is-open');
-      menuToggle.setAttribute('aria-expanded', 'false');
-      menuToggle.setAttribute(
-        'aria-label',
-        document.documentElement.lang === 'en' ? 'Open menu' : 'Abrir menu'
-      );
-      if (returnFocus) {
-        menuToggle.focus();
-      }
-    };
-
-    menuToggle.addEventListener('click', () => {
-      const willOpen = menuToggle.getAttribute('aria-expanded') !== 'true';
-      primaryNavigation.classList.toggle('is-open', willOpen);
-      menuToggle.setAttribute('aria-expanded', String(willOpen));
-      menuToggle.setAttribute(
-        'aria-label',
-        document.documentElement.lang === 'en'
-          ? `${willOpen ? 'Close' : 'Open'} menu`
-          : `${willOpen ? 'Fechar' : 'Abrir'} menu`
-      );
-    });
-
-    primaryNavigation.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => closeMenu());
-    });
-
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && primaryNavigation.classList.contains('is-open')) {
-        closeMenu(true);
-      }
-    });
-
-    mobileBreakpoint.addEventListener('change', event => {
-      if (!event.matches) {
-        closeMenu();
-      }
-    });
-  }
-
   // 1. Auto-dismiss Flash Alerts
   const flashAlerts = document.querySelectorAll('.flash-alert');
   flashAlerts.forEach(alert => {

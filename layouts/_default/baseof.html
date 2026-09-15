@@ -30,27 +30,11 @@
         
         <!-- Live System Status breathing dot -->
         <span class="status-indicator" title="Uptime 100% - Active">
-          <span class="status-dot"></span>
-          <span class="status-label">active</span>
+          <span class="status-dot"></span> active
         </span>
       </a>
-
-      <button
-        type="button"
-        class="menu-toggle"
-        id="menu-toggle"
-        aria-controls="primary-navigation"
-        aria-expanded="false"
-        aria-label="{{ if eq $.Site.Language.Lang "en" }}Open menu{{ else }}Abrir menu{{ end }}"
-      >
-        <span class="menu-toggle-icon" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
       
-      <nav class="app-nav" id="primary-navigation">
+      <nav class="app-nav">
         <a href="{{ "/" | relLangURL }}" class="nav-link" id="nav-btn-home">
           <i class="fa-solid fa-terminal nav-icon"></i> logs
         </a>
