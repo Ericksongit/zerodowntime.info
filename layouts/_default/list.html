@@ -72,7 +72,7 @@
               <ul class="archive-month-list">
                 {{ range .Pages.GroupByDate "01" }}
                 <li class="archive-month-item">
-                  <a href="#" class="archive-month-link">{{ if eq $.Site.Language.Lang "en" }}{{ index hugo.Data.months .Key | default (printf "Month %s" .Key) }}{{ else }}{{ index hugo.Data.months .Key | default (printf "Mês %s" .Key) }}{{ end }} ({{ len .Pages }})</a>
+                  <a href="#" class="archive-month-link">{{ if eq $.Site.Language.Lang "en" }}{{ index site.Data.months .Key | default (printf "Month %s" .Key) }}{{ else }}{{ index site.Data.months .Key | default (printf "Mês %s" .Key) }}{{ end }} ({{ len .Pages }})</a>
                 </li>
                 {{ end }}
               </ul>

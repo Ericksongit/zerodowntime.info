@@ -4,8 +4,8 @@
     <a href="{{ "/" | relLangURL }}" class="back-link"><i class="fa-solid fa-arrow-left"></i> cd ..</a>
   </div>
 
-  <header class="post-header" style="margin-bottom: 2rem;">
-    <h1 class="hero-title" style="margin-bottom: 0.5rem; font-size: 2.5rem;">{{ .Title }}</h1>
+  <header class="post-header">
+    <h1 class="hero-title post-detail-title">{{ .Title }}</h1>
     {{ if ne .Type "page" }}
     <div class="card-meta" style="margin-bottom: 1.5rem;">
       {{ if gt .Date.Year 1000 }}
@@ -36,7 +36,7 @@
   </div>
   {{ end }}
 
-  <div class="post-content" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary);">
+  <div class="post-content markdown-body">
     {{ .Content }}
   </div>
 </article>
